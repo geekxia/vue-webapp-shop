@@ -53,9 +53,9 @@ let router = new VueRouter({
       path: '/find',
       component: Find,
       children: [
-        { path: 'good', component: Good },  // 最终路径： /find/good
+        { path: '', component: Good },  // 最终路径： /find/good
         { path: 'price', component: Price },  // 最终路径： /find/price
-        { path: '', redirect: '/find/good' }
+        // { path: '', redirect: '/find/good' }
       ]
     },
 
@@ -86,7 +86,8 @@ router.beforeEach((to, from, next) => {
     if(isLogin) {
       next()
     } else {
-      next('/user')
+      // next('/user')
+      next()
     }
   } else {
     next()
