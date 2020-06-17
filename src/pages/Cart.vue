@@ -1,11 +1,16 @@
 <template lang="html">
 <div>
   <h1>购物车</h1>
+
+  <TabBar></TabBar>
 </div>
 </template>
 
 <script>
 export default {
+  components: {
+    TabBar: ()=>import('@/components/common/TabBar.vue')
+  },
   // 局部路由守卫：只拦截那些来到Cart组件的路由跳转行为
   // 路由钩子，由vue-router给的
   // 不能访问到this

@@ -11,11 +11,16 @@
   <!-- 这是二级路由的位置 -->
   <router-view></router-view>
 
+  <TabBar></TabBar>
+
 </div>
 </template>
 
 <script>
 export default {
+  components: {
+    TabBar: ()=>import('@/components/common/TabBar.vue')
+  }
 }
 </script>
 

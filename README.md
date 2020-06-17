@@ -82,3 +82,54 @@ created by xhf at 2020-6-16
 	10）嵌套路由：router-view组件可以进行多级嵌套，譬如`/find/good`这样的多级路由。
 	11）路由懒加载：一种性能优化方案，让组件可以在路由匹配成功时按需加载。
 	12）路由守卫：对路由匹配行为进行拦截，全局守卫使用`router.beforeEach()`，局部守卫使用`beforeRouteEach()`，常常用于实现登录权限拦截功能。
+
+
+	#### 三、vuex状态管理
+
+	1、安装
+
+	cnpm install vuex -S
+	分模块：namespaced:true
+	new Vuex.Store({modules: {}})
+
+	2、使用
+
+	...mapState('good', ['goodList'])
+
+	3、axios
+
+	cnpm install axios -S
+	axios拦截器封装，baseURL指定
+	api 接口封装
+
+
+	#### 四、vant-ui
+
+	1、安装
+
+	cnpm install vant -S
+	cnpm install babel-plugin-import -D
+	配置babel.config.js文件并重启项目
+
+	2、使用
+
+	import { Button } from 'vant'
+	components: { [Button.name]: Button }
+	<van-button size='small' type="primary">主要按钮</van-button>
+
+	3、rem配置
+
+	index.html引入rem.js
+	vscode中安装 px-to-rem 插件
+	并设置该插件的转化尺寸为 75
+	在写样式时，按 alt+Z 把px转化为rem
+
+	4、sass
+
+	cnpm install sass-loader -D
+	cnpm install node-sass -D
+	编写全局的 common.scss 样式文件
+	<style lang="scss" scoped>
+		@import './assets/common.scss';
+		@import '@/assets/common.scss';
+	</style>
