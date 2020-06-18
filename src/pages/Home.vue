@@ -32,7 +32,7 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapState, mapActions } from 'vuex'
 import { Button } from 'vant'
 export default {
   data: function(){
@@ -54,12 +54,40 @@ export default {
     console.log(this.cartList)
     console.log(this.$store)
     console.log('Button', Button)
+    var params = {
+      ct:24,
+      qqmusic_ver:1298,
+      new_json:1,
+      remoteplace:'txt.yqq.song',
+      searchid: 54616638128860322,
+      t:0,
+      aggr:1,
+      cr:1,
+      catZhida:1,
+      lossless:0,
+      flag_qc:0,
+      p:1,
+      n:10,
+      w:'%E5%91%A8%E6%9D%B0%E4%BC%A6',
+      g_tk_new_20200303:5381,
+      g_tk:5381,
+      loginUin:0,
+      hostUin:0,
+      format:'json',
+      inCharset:'utf8',
+      outCharset:'utf-8',
+      notice:0,
+      platform:'yqq.json',
+      needNewCode:0
+    }
+    this.getQqMusic(params)
   },
   components: {
     TabBar: ()=>import('@/components/common/TabBar.vue'),
     [Button.name]:Button
   },
   methods: {
+    ...mapActions('music', ['getQqMusic']),
     skip(id) {
       this.$router.push('/detail/'+id)
     }

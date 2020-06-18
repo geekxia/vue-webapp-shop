@@ -4,11 +4,13 @@ Vue.use(Vuex)
 
 import good from './modules/good'
 import cart from './modules/cart'
+import music from './modules/music'
 
 const store = new Vuex.Store({
   modules: {
     good,
-    cart
+    cart,
+    music
   }
 })
 

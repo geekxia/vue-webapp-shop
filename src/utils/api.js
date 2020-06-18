@@ -21,8 +21,19 @@ export function fetchLogin(data) {
 }
 
 
+// QQ周杰伦音乐
+export function fetchQqMusic(params) {
+  return fetch({
+    method: 'GET',
+    params: params,
+    url: '/soso/fcgi-bin/client_search_cp'
+  })
+}
+
+
 
 export default {
   fetchGoodList,
-  fetchLogin
+  fetchLogin,
+  fetchQqMusic
 }

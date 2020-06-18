@@ -5,7 +5,8 @@ import axios from 'axios'
 // 上线:http://baidu.com
 // var baseURL = 'http://127.0.0.1'
 // var baseURL = 'http://10.36.136.170:9999'
-var baseURL = 'http://127.0.0.1:8000'
+// var baseURL = 'http://127.0.0.1:8000'
+var baseURL = 'http://localhost:9090'
 
 // 这是axios实例
 const fetch = axios.create({
@@ -29,10 +30,10 @@ fetch.interceptors.request.use(config => {
 fetch.interceptors.response.use(response => {
   var res = {}
   // console.log('响应拦截，ajax接收数据之前', response)
-  if (response.data && response.data.err===0) {
-    res = response.data.data || {}
+  if (response.data && response.data.code===0) {
+    res = response.data || {}
   } else {
-    var msg = response.data.message || '请求错误'
+    // var msg = response.data.message || '请求错误'
     // Message({
     //   message: msg,
     //   type: 'error',
@@ -42,7 +43,7 @@ fetch.interceptors.response.use(response => {
   return res
 }, error => {
   // 调接口失败时，弹个框提示一个用户
-  const msg = error.Message !== undefined ? error.Message : ''
+  // const msg = error.Message !== undefined ? error.Message : ''
   // Message({
   //   message: '网络错误' + msg,
   //   type: 'error',
