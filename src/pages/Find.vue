@@ -3,52 +3,58 @@
 
   <div class="find-left">
     <van-sidebar v-model="activeKey">
-      <van-sidebar-item title="标签名称" />
-      <van-sidebar-item title="标签名称" />
-      <van-sidebar-item title="标签名称" />
-      <van-sidebar-item title="标签名称" />
-      <van-sidebar-item title="标签名称" />
-      <van-sidebar-item title="标签名称" />
-      <van-sidebar-item title="标签名称" />
-      <van-sidebar-item title="标签名称" />
-      <van-sidebar-item title="标签名称" />
-      <van-sidebar-item title="标签名称" />
-      <van-sidebar-item title="标签名称" />
-      <van-sidebar-item title="标签名称" />
-      <van-sidebar-item title="标签名称" />
-      <van-sidebar-item title="标签名称" />
-      <van-sidebar-item title="标签名称" />
-      <van-sidebar-item title="标签名称" />
-      <van-sidebar-item title="标签名称" />
-      <van-sidebar-item title="标签名称" />
-      <van-sidebar-item title="标签名称" />
-      <van-sidebar-item title="标签名称" />
-      <van-sidebar-item title="标签名称" />
-      <van-sidebar-item title="标签名称" />
-      <van-sidebar-item title="标签名称" />
-      <van-sidebar-item title="标签名称" />
+      <van-sidebar-item title="个人清洁" />
+      <van-sidebar-item title="汽车生活" />
+      <van-sidebar-item title="男装女装" />
+      <van-sidebar-item title="个人清洁" />
+      <van-sidebar-item title="汽车生活" />
+      <van-sidebar-item title="男装女装" />
+      <van-sidebar-item title="个人清洁" />
+      <van-sidebar-item title="汽车生活" />
+      <van-sidebar-item title="男装女装" />
+      <van-sidebar-item title="个人清洁" />
+      <van-sidebar-item title="汽车生活" />
+      <van-sidebar-item title="男装女装" />
+      <van-sidebar-item title="个人清洁" />
+      <van-sidebar-item title="汽车生活" />
+      <van-sidebar-item title="男装女装" />
+      <van-sidebar-item title="个人清洁" />
+      <van-sidebar-item title="汽车生活" />
+      <van-sidebar-item title="男装女装" />
     </van-sidebar>
   </div>
 
   <div class="find-right">
-    <div v-for='i in 10' :key='i'>
-      <van-grid :border="false" :column-num="3">
+    <div v-for='i in 20' :key='i'>
+      <van-grid column-num='3'>
         <van-grid-item>
-          <van-image src="https://img.yzcdn.cn/vant/apple-1.jpg" />
-          <span>电脑</span>
+          <template>
+            <div class="find-good">
+              <van-image src="https://img.yzcdn.cn/vant/cat.jpeg" />
+              <div>名字</div>
+            </div>
+          </template>
         </van-grid-item>
         <van-grid-item>
-          <van-image src="https://img.yzcdn.cn/vant/apple-2.jpg" />
-          <span>电脑</span>
+          <template>
+            <div class="find-good">
+              <van-image src="https://img.yzcdn.cn/vant/cat.jpeg" />
+              <div>名字</div>
+            </div>
+          </template>
         </van-grid-item>
         <van-grid-item>
-          <van-image src="https://img.yzcdn.cn/vant/apple-3.jpg" />
-          <span>电脑</span>
+          <template>
+            <div class="find-good">
+              <van-image src="https://img.yzcdn.cn/vant/cat.jpeg" />
+              <div>名字</div>
+            </div>
+          </template>
         </van-grid-item>
       </van-grid>
     </div>
-
   </div>
+
 
   <TabBar></TabBar>
 </div>
@@ -60,24 +66,21 @@ import {
   SidebarItem,
   Grid,
   GridItem,
-  Image,
-  Row,
-  Col
+  Image
 } from 'vant'
 export default {
+  name: 'Find',   // name选项的作用是给当前取个名字，便于在devtools查看
   components: {
     TabBar: ()=>import('@/components/common/TabBar.vue'),
     [Sidebar.name]: Sidebar,
     [SidebarItem.name]: SidebarItem,
     [Grid.name]: Grid,
     [GridItem.name]: GridItem,
-    [Image.name]: Image,
-    [Row.name]: Row,
-    [Col.name]: Col
+    [Image.name]: Image
   },
   data: function() {
     return {
-      activeKey: 0
+      activeKey: 1
     }
   }
 }
@@ -85,30 +88,31 @@ export default {
 
 <style lang="scss" scoped>
 .find {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 1.33rem;
   .find-left {
     position: absolute;
     left: 0;
-    width: 2.27rem;
-    bottom: 0;
+    bottom: 1.6rem;
     top: 0;
+    width: 2.27rem;
     overflow: auto;
-    -webkit-overflow-scrolling: touch;
-    overflow-scrolling: touch;
+    // 在移动端有absolute产生滚动条，使用下面这个属性，可以更加流畅
+    overflow-scrolling : touch;
   }
   .find-right {
     position: absolute;
     top: 0;
     right: 0;
+    bottom: 1.6rem;
     left: 2.27rem;
-    bottom: 0;
+    background-color: orange;
     overflow: auto;
-    -webkit-overflow-scrolling: touch;
-    overflow-scrolling: touch;
+    overflow-scrolling : touch;
+  }
+  .find-good {
+    &>div {
+      font-size: .4rem;
+      text-align: center;
+    }
   }
 }
 </style>

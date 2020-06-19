@@ -15,7 +15,7 @@
     <van-col span='18'>
       <div>GeekXia</div>
       <div>xiahaifeng</div>
-      <div><span>京享值50098</span><span>小白信用95.8 ></span></div>
+      <div><span>京享值50098</span> <span>小白信用95.8 ></span></div>
     </van-col>
   </van-row>
 </div>

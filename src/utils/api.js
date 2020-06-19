@@ -1,39 +1,105 @@
-import fetch from './fetch'
+import fetch from './fetch'  // fetch实际上一个axios实例（promise对象）
 
-// 用于获取商品列表
-export function fetchGoodList(params) {
-  // 返回Promise
+// ES6 模块：任何一个js文件都可以看成是一个独立作用域的模块
+
+// 第一种写法
+// export aaa
+// export bbb
+// import { aaa, bbb } from './xxx.js'
+
+// 第二种写法：在同一个模块中，最多只能使用一次 export default
+// export default
+// import ccc from './xxx.js'
+
+// 注册接口
+export function regist(data) {
   return fetch({
-    method: "GET",
-    params: params,
-    url: '/xxx/getGoodList'
+    url: '/user/regist',
+    method: 'POST',
+    data
   })
 }
-
-
 // 登录接口
-export function fetchLogin(data) {
+export function login(data) {
   return fetch({
-    method: "post",
-    data: data,
-    url: '/xxx/login'
+    url: '/user/login',
+    method: 'POST',
+    data
   })
 }
 
-
-// QQ周杰伦音乐
-export function fetchQqMusic(params) {
+// 获取首页为你推荐的商品列表
+export function getHotGoodList(params) {
   return fetch({
+    url: '/jd/getHotGoodList',
     method: 'GET',
-    params: params,
-    url: '/soso/fcgi-bin/client_search_cp'
+    params
   })
 }
 
+// 获取商品详情
+export function getGoodDetail(params) {
+  return fetch({
+    url: '/jd/getGoodDetail',
+    method: 'GET',
+    params
+  })
+}
 
+// 加入购物车
+export function addToCart(data) {
+  return fetch({
+    url: '/jd/addToCart',
+    method: 'POST',
+    data
+  })
+}
 
+// 获取购物车列表
+export function getCartList(params) {
+  return fetch({
+    url: '/jd/getCartList',
+    method: 'GET',
+    params
+  })
+}
+
+// 删除一条购物记录
+export function deleteCart(params) {
+  return fetch({
+    url: '/jd/deleteToCart',
+    method: 'GET',
+    params
+  })
+}
+
+// 修改购物车中商品的数量
+export function updateCart(data) {
+  return fetch({
+    url: '/jd/updateCartNum',
+    method: 'POST',
+    data
+  })
+}
+
+// 提交购物车
+export function submitCart(data) {
+  return fetch({
+    url: '/jd/submitToCart',
+    method: 'POST',
+    data
+  })
+}
+
+// 把所有接口方法统一抛出
 export default {
-  fetchGoodList,
-  fetchLogin,
-  fetchQqMusic
+  regist,
+  login,
+  getHotGoodList,
+  getGoodDetail,
+  addToCart,
+  getCartList,
+  deleteCart,
+  updateCart,
+  submitCart
 }

@@ -1,13 +1,19 @@
 <template lang="html">
 <div class="detail">
+
+  <!-- 顶部navbar -->
   <van-nav-bar
     title="商品详情"
     left-text="返回"
     left-arrow
     fixed
-    @click-left="onClickLeft"
+    @click-left="onBack"
   />
 
+  <h3 v-text='info.name'></h3>
+  <img :src="info.img">
+
+  <!-- 底部按钮群 -->
   <van-goods-action>
     <van-goods-action-icon icon="chat-o" text="客服" />
     <van-goods-action-icon icon="cart-o" text="购物车" />
@@ -15,21 +21,30 @@
     <van-goods-action-button
       type="danger"
       text="立即购买"
+      @click='addToCart'
     />
   </van-goods-action>
 </div>
 </template>
 
 <script>
-import { GoodsAction, GoodsActionIcon, GoodsActionButton, NavBar } from 'vant'
+import {
+  GoodsAction,
+  GoodsActionIcon,
+  GoodsActionButton,
+  NavBar,
+  Button,
+  Toast
+} from 'vant'
 export default {
+  name: 'Detail',
   components: {
     [GoodsAction.name]: GoodsAction,
     [GoodsActionIcon.name]: GoodsActionIcon,
     [GoodsActionButton.name]: GoodsActionButton,
-    [NavBar.name]: NavBar
+    [NavBar.name]: NavBar,
+    [Button.name]: Button
   },
-  // props: ['id'],
   props: {
     id: {
       type: String,
@@ -38,25 +53,48 @@ export default {
   },
   data: function() {
     return {
-      // info: {}
+      info: {}
     }
   },
   mounted() {
-    // 动态路由
-    console.log('动态路由', this.$route.params.id)
-    // 路由传参
-    console.log('路由传参', this.id)
-
-    // 根据id调接口，获取商品详情，并赋值给声明式变量
-    // this.info = 返回商品详情结果
+    let params = {
+      good_id: this.$route.params.id
+    }
+    this.$http.getGoodDetail(params).then(res=>{
+      this.info = res
+    })
   },
   methods: {
-    onClickLeft() {
+    onBack() {
       this.$router.back()
+    },
+    // 添加购物车
+    addToCart() {
+      let data = {
+        good_id: this.info._id
+      }
+      this.$http.addToCart(data).then(()=>{
+        Toast('添加成功')
+        this.timer = setTimeout(()=>{
+          this.$router.push('/cart')
+        },1500)
+      })
     }
+  },
+  beforeDestroy() {
+    clearTimeout(this.timer)
   }
 }
 </script>
 
-<style lang="css" scoped>
+<style lang="scss" scoped>
+.detail {
+  padding-top: 1.33rem;
+  text-align: center;
+  &>img {
+    display: block;
+    width: 5rem;
+    margin: 0 auto;
+  }
+}
 </style>

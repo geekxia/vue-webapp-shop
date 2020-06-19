@@ -1,60 +1,76 @@
-<template lang="html">
-<div>
+<template>
+<div class="home">
   <van-pull-refresh v-model="refreshing" @refresh="onRefresh">
 
-    <!-- 顶部通知栏 -->
+    <!-- 顶部提示框 -->
     <van-notice-bar
-      mode="closeable"
-      background='#333333'
+      left-icon='volume-o'
+      background='#B20D07'
       color='#ffffff'
-      left-icon="volume-o"
-      scrollable>
+      scrollable
+      mode="closeable">
       打开京东App，购物更轻松; 京东618，秒杀全场！手快可抢618元大红包！
     </van-notice-bar>
 
-    <!-- 搜索 -->
+    <!-- 搜索框 -->
     <van-search
       shape="round"
-      background="#ED3861"
-      placeholder="鲁花花生油"
-      disabled
+      background="#B20D07"
+      :placeholder="tips"
       show-action
+      disabled
     >
       <template #action>
-        <div>登录</div>
+        <div class="login" @click="skipToLogin">登录</div>
       </template>
     </van-search>
 
     <!-- 轮播图 -->
-    <van-swipe class="my-swipe" :autoplay="3000" indicator-color="white">
+    <van-swipe class="home-swipe" :autoplay="3000" indicator-color="white">
       <van-swipe-item>
         <van-image
-          src="//img14.360buyimg.com/mcoss/s710x206_jfs/t1/121290/2/5076/99430/5ee9eeade521ba031/6c1798292ac89d33.jpg!q70.dpg.webp"
+          fit="contain"
+          src="//m.360buyimg.com/mobilecms/s700x280_jfs/t1/123287/30/5114/118908/5ee9e766E50040221/cd2215a2d91d1809.jpg!cr_1125x445_0_171!q70.jpg.dpg"
         />
       </van-swipe-item>
       <van-swipe-item>
         <van-image
-          src="//img12.360buyimg.com/mcoss/s710x206_jfs/t1/149315/4/865/102109/5eea31a7e31cae925/23a328414fd42329.png.webp"
+          fit="contain"
+          src="//m.360buyimg.com/mobilecms/s700x280_jfs/t1/120069/23/3943/100429/5ed706a6E46b65a74/11457cbd655fff67.jpg!cr_1125x445_0_171!q70.jpg.dpg"
         />
       </van-swipe-item>
       <van-swipe-item>
         <van-image
-          src="//img1.360buyimg.com/pop/s710x206_jfs/t1/107064/24/16928/112052/5e81a779e1e98399a/90fbe934ce1a6a65.jpg!cc_710x206!q70.dpg.webp"
+          fit="contain"
+          src="//m.360buyimg.com/mobilecms/s700x280_jfs/t1/118233/21/10385/193825/5ee9e683E5392791c/09391ad1586a223b.jpg!q70.jpg.dpg"
         />
       </van-swipe-item>
     </van-swipe>
 
-    <van-divider>为你推荐</van-divider>
+    <!-- 分隔线 -->
+    <van-divider>
+      <template>
+        <div class="hot">为你推荐</div>
+      </template>
+    </van-divider>
 
+    <!-- 列表 -->
     <van-list
       finished-text="没有更多了"
+      :finished="finished"
+      v-model="loading"
       @load="onLoad"
-      offset='300'
+      :immediate-check='false'
+      offset='50'
     >
-      <!-- <van-cell  /> -->
-      <div @click='skip(item.id)' class='good' v-for="item in goods" :key="item.id" v-text="item.name"></div>
+      <!-- v-for循环一个数字时，是从1开始 -->
+      <div v-for="i in len" :key="i">
+        <Good :good='list[2*(i-1)]'></Good>
+        <Good :good='list[2*(i-1)+1]'></Good>
+      </div>
     </van-list>
   </van-pull-refresh>
+
 
   <TabBar></TabBar>
 
@@ -63,118 +79,112 @@
 
 <script>
 import {
-  Button,
   NoticeBar,
   Search,
   Swipe,
   SwipeItem,
+  Image,
   Divider,
-  List,
   PullRefresh,
-  Image
+  List,
+  Toast
 } from 'vant'
 export default {
   name: 'Home',
   components: {
     TabBar: ()=>import('@/components/common/TabBar.vue'),
-    [Button.name]:Button,
+    Good: ()=>import('@/components/common/Good.vue'),
     [NoticeBar.name]: NoticeBar,
     [Search.name]: Search,
     [Swipe.name]: Swipe,
     [SwipeItem.name]: SwipeItem,
+    [Image.name]: Image,
     [Divider.name]: Divider,
     [List.name]: List,
-    [PullRefresh.name]: PullRefresh,
-    [Image.name]: Image
+    [PullRefresh.name]: PullRefresh
   },
-  data: function(){
+  data: function() {
     return {
-      goods: [
-        { id:1, name: '笔记本', price: '5000'},
-        { id:2, name: '鼠标', price: '100'},
-        { id:3, name: '键盘', price: '300'},
-        { id:4, name: '耳机', price: '200'},
-        { id:5, name: '耳机', price: '200'},
-        { id:6, name: '耳机', price: '200'},
-        { id:7, name: '耳机', price: '200'},
-        { id:8, name: '耳机', price: '200'},
-        { id:9, name: '耳机', price: '200'},
-        { id:10, name: '耳机', price: '200'},
-        { id:11, name: '耳机', price: '200'}
-      ],
-      refreshing: false
+      refreshing: false,
+      list: [],
+      page: 1,
+      finished: false,
+      loading: false
+    }
+  },
+  computed: {
+    tips: function() {
+      var arr = ['九阳热水壶','Mac Pro', '笔记本电脑']
+      return arr[Math.floor(Math.random()*3)]
+    },
+    len: function() {
+      return Math.floor(this.list.length/2)
     }
   },
   mounted() {
-    console.log(this.goodList)
-    console.log(this.cartList)
-    console.log(this.$store)
-    console.log('Button', Button)
-    var params = {
-      ct:24,
-      qqmusic_ver:1298,
-      new_json:1,
-      remoteplace:'txt.yqq.song',
-      searchid: 54616638128860322,
-      t:0,
-      aggr:1,
-      cr:1,
-      catZhida:1,
-      lossless:0,
-      flag_qc:0,
-      p:1,
-      n:10,
-      w:'%E5%91%A8%E6%9D%B0%E4%BC%A6',
-      g_tk_new_20200303:5381,
-      g_tk:5381,
-      loginUin:0,
-      hostUin:0,
-      format:'json',
-      inCharset:'utf8',
-      outCharset:'utf-8',
-      notice:0,
-      platform:'yqq.json',
-      needNewCode:0
-    }
-    this.getQqMusic(params)
+    this.getList()
   },
   methods: {
-    skip(id) {
-      this.$router.push('/detail/'+id)
-    },
-    onLoad() {
-      console.log('上拉加载')
-      this.goods.push({id:Date.now(), name: '测试'})
+    skipToLogin() {
+      // 跳转去登录页
     },
     onRefresh() {
-      console.log('下拉刷新')
-      setTimeout(()=>{
+      this.page = 1
+      this.getList()
+    },
+    onLoad() {
+      this.loading = true
+      this.page++
+      this.getList()
+    },
+    getList() {
+      let params = {
+        hot: false,
+        page: this.page
+      }
+      this.$http.getHotGoodList(params).then(res=>{
+        console.log('商品列表', res)
+        if (res.length < 10) {
+          Toast('没有更多了')
+        }
+        if (this.refreshing) {
+          this.list = res
+        } else {
+          this.list = [...this.list, ...res]
+        }
+        this.finished = false
         this.refreshing = false
-      }, 2000)
+        this.loading = false
+      })
     }
   }
 }
 </script>
 
 <style lang="scss" scoped>
-.my-swipe .van-swipe-item {
-  color: #fff;
-  font-size: 20px;
-  line-height: 150px;
-  text-align: center;
-  background-color: #ED3861;
+
+@import '@/assets/common.scss';
+// @import '../assets/common.scss';
+.home {
+  .login {
+    color: #ffffff;
+  }
+  .van-swipe-item {
+    .van-image {
+      display: block;
+      width: 100%;
+      height: 100%;
+    }
+  }
+  .van-divider {
+    border-color: #B20D07;
+    .hot {
+      color: #B20D07;
+      font-size: .4rem;
+      font-weight: bold;
+    }
+  }
+
 }
-.good {
-  line-height: 1.33rem;
-  border: 1px solid #ccc;
-  text-align: center;
-}
-.van-swipe-item {
-  height: 4.5rem;
-}
-.van-image {
-  display: block;
-  width: 100%;
-  height: 100%;
-}
+
 </style>

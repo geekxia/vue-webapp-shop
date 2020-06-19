@@ -18,6 +18,9 @@ const Find = ()=>import('./pages/Find.vue')
 const User = ()=>import('./pages/User.vue')
 const Detail = ()=>import('./pages/Detail.vue')
 const Cart = ()=>import('./pages/Cart.vue')
+const Login = ()=>import('./pages/Login.vue')
+const Regist = ()=>import('./pages/Regist.vue')
+
 
 // @ 别名，它代表就是的当前代码所在绝对路径 + /src
 import A from '@/components/home/A.vue'
@@ -67,6 +70,10 @@ let router = new VueRouter({
 
     { path: '/cart', component: Cart },
 
+    { path: '/login', component: Login },
+    { path: '/regist', component: Regist },
+
+
     // 通配符 * 表示匹配任何路径，一定要放在 routes数组后面
     // 把这种匹配范围更大的路由关系，往后放
     { path: '/find*', component: Find },
@@ -78,7 +85,7 @@ let router = new VueRouter({
 // 全局路由守卫：会拦截所有的路由跳转行为
 // 常用于实现登录拦截
 router.beforeEach((to, from, next) => {
-  console.log(to, from)
+  // console.log(to, from)
   // 只对访问购物车组件的路由跳转行为进行拦截
   if (to.fullPath == '/cart') {
     let isLogin = false

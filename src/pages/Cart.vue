@@ -1,100 +1,161 @@
 <template lang="html">
 <div class="cart">
 
-  <!-- navbar -->
-  <van-nav-bar title="购物车" left-text="返回" @click-left="onClickLeft" left-arrow fixed>
+  <!-- 顶部导航栏 -->
+  <van-nav-bar
+    title="购物"
+    left-text="返回"
+    right-text="..."
+    left-arrow
+    @click-left="onBack"
+    fixed
+  >
     <template #right>
-      <van-icon name="ellipsis" size="18" />
+      <van-icon name="underway-o" />
     </template>
   </van-nav-bar>
 
-  <!-- 购物车列表 -->
-  <div v-for='item in list' :key='item' class="cart-good">
+  <!-- 购物车商品列表 -->
+  <div class="cart-good" v-for='(item,index) in list' :key='item._id'>
     <van-swipe-cell>
       <van-row type="flex" justify='center' align='center'>
-        <van-col span="4">
-          <!-- checkbox上下左右居中 -->
-          <van-cell center>
-            <van-checkbox v-model="checked"></van-checkbox>
+        <van-col span='4'>
+          <van-cell>
+            <van-checkbox @change='checkChange(index, $event)' v-model="item.checked" />
           </van-cell>
         </van-col>
-        <van-col span="20">
+        <van-col span='20'>
           <van-card
-            num="1"
-            price="2.00"
-            desc="描述信息"
-            title="商品标题"
-            thumb="https://img.yzcdn.cn/vant/ipad.jpeg"
+            :num="item.num"
+            :price="item.good.price"
+            :desc="item.good.desc"
+            :title="item.good.name"
+            :thumb="item.good.img"
           >
             <template #footer>
-              <van-button size="mini">-</van-button>
-              <van-button size="mini">+</van-button>
+              <van-button size="mini" @touchstart='onUpdate("sub", item)'>-</van-button>
+              <van-button size="mini" @touchstart='onUpdate("add", item)'>+</van-button>
             </template>
           </van-card>
         </van-col>
       </van-row>
-      <!-- 左滑删除 -->
       <template #right>
-        <van-button square text="删除" type="danger" class="delete-button" />
+        <van-button @touchstart='onDelete(item)' square text="删除" type="danger" class="delete-button" />
       </template>
     </van-swipe-cell>
   </div>
 
-
-  <van-submit-bar :price="3050" button-text="提交订单" @submit="onSubmit">
+  <!-- 底部提交 -->
+  <van-submit-bar :price="total" button-text="提交订单" @submit="onSubmit">
     <van-checkbox v-model="checked">全选</van-checkbox>
     <template #tip>
-      你的收货地址不支持同城送, <span @click="onEdit">修改地址</span>
+      你的收货地址不支持同城送, <span class="edit" @click="editAddr">修改地址</span>
     </template>
   </van-submit-bar>
 
-
-  <!-- <TabBar></TabBar> -->
 </div>
 </template>
 
 <script>
 import {
-  Card,
-  Button,
   SubmitBar,
   Checkbox,
+  NavBar,
+  Icon,
+  Card,
+  Button,
   Row,
   Col,
   Cell,
   SwipeCell,
-  NavBar,
-  Icon
+  Toast
 } from 'vant'
+import { mapState, mapGetters, mapActions, mapMutations } from 'vuex'
 export default {
+  name: 'Cart',
   components: {
-    // TabBar: ()=>import('@/components/common/TabBar.vue'),
-    [Card.name]: Card,
-    [Button.name]: Button,
     [SubmitBar.name]: SubmitBar,
     [Checkbox.name]: Checkbox,
+    [NavBar.name]: NavBar,
+    [Icon.name]: Icon,
+    [Card.name]: Card,
+    [Button.name]: Button,
     [Row.name]: Row,
     [Col.name]: Col,
     [Cell.name]: Cell,
-    [SwipeCell.name]: SwipeCell,
-    [NavBar.name]: NavBar,
-    [Icon.name]: Icon
+    [SwipeCell.name]: SwipeCell
   },
   data: function() {
     return {
-      list: [1,2,3,4,5,6,7,8,9,10],
       checked: true
     }
   },
+  computed: {
+    ...mapState('cart', ['list']),
+    ...mapGetters('cart', ['total'])
+  },
+  watch: {
+    checked: function(newVal) {
+      this.updateListAll(newVal)
+    }
+  },
+  mounted() {
+    this.getCartList({})
+  },
   methods: {
-    onEdit() {
-      console.log('修改收货地址')
+    ...mapActions('cart', ['getCartList']),
+    ...mapMutations('cart', ['updateListItem', 'updateListAll']),
+    editAddr() {
+      // 跳转到地址修改页面
+    },
+    onBack() {
+      // 返回上一页
+      this.$router.replace('/home')
+    },
+    onDelete(item) {
+      // 删除一条记录
+      let params = {
+        id: item._id
+      }
+      this.$http.deleteCart(params).then(()=>{
+        // 刷新购物车
+        Toast('删除成功')
+        this.getCartList({})
+      })
+    },
+    onUpdate(type, item) {
+      // 修改商品数量
+      if (type=='sub' && item.num==1) return Toast('数量不能小于1')
+      let data = {
+        id: item._id,
+        num: type=='sub' ? item.num-1 : item.num+1
+      }
+      this.$http.updateCart(data).then(()=>{
+        Toast('数量修改成功')
+        // 刷新购物车
+        this.getCartList({})
+      })
+    },
+    checkChange(index, check) {
+      this.updateListItem({index,check})
     },
     onSubmit() {
-      console.log('提交')
-    },
-    onClickLeft() {
-      this.$router.back()
+      // 提交订单
+      let str = ''
+      this.list.map(ele=>{
+        if (ele.checked) {
+          str += (';'+ele._id)
+        }
+      })
+      console.log('str', str)
+      let data = {
+        goods: str
+      }
+      this.$http.submitCart(data).then(()=>{
+        // 刷新购物车
+        this.getCartList({})
+        this.$router.replace('/home')
+      })
     }
   }
 }
@@ -102,27 +163,24 @@ export default {
 
 <style lang="scss" scoped>
 .cart {
-  padding-bottom: 2rem;
-  padding-top: 1.33rem;
-}
-.cart-good {
-  border-bottom: 1px solid #eee;
-  box-sizing: border-box;
-}
-.van-card {
-  background: #fff;
-  padding-left: 0;
-}
-// .van-checkbox {
-//   text-align: center;
-//   display: inline-block;
-// }
-.goods-card {
-    margin: 0;
-    background-color: #fff;
+  padding-bottom: 1.6rem;
+  padding-top: 2rem;
+  .edit {
+    color: blue;
   }
-
+  .test {
+    height: .67rem;
+    border: 1px solid red;
+  }
+  .cart-good {
+    border-bottom: 1px solid #eee;
+  }
+  .van-card {
+    padding-left: 0;
+    background: #ffffff;
+  }
   .delete-button {
     height: 100%;
   }
+}
 </style>
