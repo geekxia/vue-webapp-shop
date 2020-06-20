@@ -3,24 +3,10 @@
 
   <div class="find-left">
     <van-sidebar v-model="activeKey">
-      <van-sidebar-item title="个人清洁" />
-      <van-sidebar-item title="汽车生活" />
-      <van-sidebar-item title="男装女装" />
-      <van-sidebar-item title="个人清洁" />
-      <van-sidebar-item title="汽车生活" />
-      <van-sidebar-item title="男装女装" />
-      <van-sidebar-item title="个人清洁" />
-      <van-sidebar-item title="汽车生活" />
-      <van-sidebar-item title="男装女装" />
-      <van-sidebar-item title="个人清洁" />
-      <van-sidebar-item title="汽车生活" />
-      <van-sidebar-item title="男装女装" />
-      <van-sidebar-item title="个人清洁" />
-      <van-sidebar-item title="汽车生活" />
-      <van-sidebar-item title="男装女装" />
-      <van-sidebar-item title="个人清洁" />
-      <van-sidebar-item title="汽车生活" />
-      <van-sidebar-item title="男装女装" />
+      <van-sidebar-item
+        v-for='item in cates'
+        :key='item._id'
+       :title='item.cate_zh' />
     </van-sidebar>
   </div>
 
@@ -68,6 +54,7 @@ import {
   GridItem,
   Image
 } from 'vant'
+import { mapState, mapMutations } from 'vuex'
 export default {
   name: 'Find',   // name选项的作用是给当前取个名字，便于在devtools查看
   components: {
@@ -80,7 +67,45 @@ export default {
   },
   data: function() {
     return {
-      activeKey: 1
+      activeKey: 0,
+      cates: []
+    }
+  },
+  computed: {
+    ...mapState('find', ['cateObj'])
+  },
+  watch: {
+    activeKey: function(newVal) {
+      // 先判断缓存中有没有数据，当没有时才需要调接口
+      if (this.cateObj[newVal]) return
+      this.getGoods()
+    }
+  },
+  mounted() {
+    this.init()
+  },
+  methods: {
+    ...mapMutations('find',['updateCateObj']),
+    // 把异步方法变成同步执行
+    async init() {
+      let arr = await this.$http.getAllCates({})
+      this.cates = arr
+      this.getGoods()
+    },
+    getGoods() {
+      let params = {
+        cate: this.cates[this.activeKey].cate
+      }
+      this.$http.getGoodOfCate(params).then(res=>{
+        let payload = {
+          idx: this.activeKey,
+          key: params.cate,
+          val: res
+        }
+        // 把请求到数据，缓存到状态管理工具中去
+        // 不建议使用localStorage来做缓存
+        this.updateCateObj(payload)
+      })
     }
   }
 }

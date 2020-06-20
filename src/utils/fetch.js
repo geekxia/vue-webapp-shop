@@ -35,11 +35,16 @@ fetch.interceptors.response.use((response) => {
   // 数据过滤，根据后端标识字符来进行数据
   if (response.data && response.data.err==0) {
     return response.data.data
+  } else if(response.data.err==2) {
+    console.log(response.data.msg)
   } else {
     Toast(response.data.msg)
   }
 }, (error) => {
   // 请求失败
+  console.log('haha', error)
+  // location.href = '/#/login'
+  console.log(location)
   return Promise.reject(error)
 })
 

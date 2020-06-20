@@ -14,6 +14,12 @@ export default  {
         }
       })
       return t
+    },
+    // 用于控制全选按钮
+    full: function(state) {
+      let arr = state.list.filter(ele => ele.checked == false)
+      // console.log(arr)
+      return arr.length==0 ? true : false
     }
   },
   mutations: {

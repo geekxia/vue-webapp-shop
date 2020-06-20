@@ -47,7 +47,7 @@
 
   <!-- 底部提交 -->
   <van-submit-bar :price="total" button-text="提交订单" @submit="onSubmit">
-    <van-checkbox v-model="checked">全选</van-checkbox>
+    <van-checkbox v-model="full">全选</van-checkbox>
     <template #tip>
       你的收货地址不支持同城送, <span class="edit" @click="editAddr">修改地址</span>
     </template>
@@ -86,13 +86,11 @@ export default {
     [SwipeCell.name]: SwipeCell
   },
   data: function() {
-    return {
-      checked: true
-    }
+    return {}
   },
   computed: {
     ...mapState('cart', ['list']),
-    ...mapGetters('cart', ['total'])
+    ...mapGetters('cart', ['total', 'full'])
   },
   watch: {
     checked: function(newVal) {

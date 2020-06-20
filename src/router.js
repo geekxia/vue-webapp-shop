@@ -87,14 +87,12 @@ let router = new VueRouter({
 router.beforeEach((to, from, next) => {
   // console.log(to, from)
   // 只对访问购物车组件的路由跳转行为进行拦截
-  if (to.fullPath == '/cart') {
-    let isLogin = false
-    // console.log('fullpath', to.fullpath)
-    if(isLogin) {
+  if (to.fullPath=='/cart' || to.fullPath=='/user') {
+    let token = localStorage.getItem('token')
+    if(token) {
       next()
     } else {
-      // next('/user')
-      next()
+      next('/login')
     }
   } else {
     next()

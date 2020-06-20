@@ -11,6 +11,7 @@ import { mapActions } from 'vuex'
 export default {
   name: 'App',
   mounted() {
+    // websocket初始化
     this.getCartList({})
   },
   methods: {

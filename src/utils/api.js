@@ -91,6 +91,24 @@ export function submitCart(data) {
   })
 }
 
+// 获取所有品类
+export function getAllCates(params) {
+  return fetch({
+    url: '/jd/getAllCates',
+    method: 'GET',
+    params
+  })
+}
+
+// 基于品类进行筛选
+export function getGoodOfCate(params) {
+  return fetch({
+    url: '/jd/getCateGoodList',
+    method: 'GET',
+    params
+  })
+}
+
 // 把所有接口方法统一抛出
 export default {
   regist,
@@ -101,5 +119,7 @@ export default {
   getCartList,
   deleteCart,
   updateCart,
-  submitCart
+  submitCart,
+  getAllCates,
+  getGoodOfCate
 }
