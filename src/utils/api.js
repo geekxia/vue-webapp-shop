@@ -14,7 +14,7 @@ import fetch from './fetch'  // fetch实际上一个axios实例（promise对象�
 // 注册接口
 export function regist(data) {
   return fetch({
-    url: '/user/regist',
+    url: '/users/regist',
     method: 'POST',
     data
   })
@@ -22,7 +22,7 @@ export function regist(data) {
 // 登录接口
 export function login(data) {
   return fetch({
-    url: '/user/login',
+    url: '/users/login',
     method: 'POST',
     data
   })
@@ -31,7 +31,7 @@ export function login(data) {
 // 获取首页为你推荐的商品列表
 export function getHotGoodList(params) {
   return fetch({
-    url: '/jd/getHotGoodList',
+    url: '/good/list',
     method: 'GET',
     params
   })
@@ -40,7 +40,7 @@ export function getHotGoodList(params) {
 // 获取商品详情
 export function getGoodDetail(params) {
   return fetch({
-    url: '/jd/getGoodDetail',
+    url: '/good/detail',
     method: 'GET',
     params
   })
@@ -49,7 +49,7 @@ export function getGoodDetail(params) {
 // 加入购物车
 export function addToCart(data) {
   return fetch({
-    url: '/jd/addToCart',
+    url: '/good/add',
     method: 'POST',
     data
   })
@@ -58,7 +58,7 @@ export function addToCart(data) {
 // 获取购物车列表
 export function getCartList(params) {
   return fetch({
-    url: '/jd/getCartList',
+    url: '/cart/list',
     method: 'GET',
     params
   })

@@ -2,6 +2,7 @@
 
 // node.js代码风格
 module.exports = {
+  publicPath: process.env.NODE_ENV === 'production' ? './' : '/',
   devServer: {
     port: 8888,
     proxy: {
@@ -12,13 +13,13 @@ module.exports = {
         ws: true,
         changeOrigin: true
       },
-      '/user': {
+      '/jd': {
         target: 'http://localhost:9999',
         ws: true,
         changeOrigin: true
       },
-      '/jd': {
-        target: 'http://localhost:9999',
+      '/api': {
+        target: 'http://localhost:3000',
         ws: true,
         changeOrigin: true
       }

@@ -344,3 +344,114 @@ created by xhf at 2020-6-16
 
 	ToB产品：数据交互极其复杂，一般不用设计UI稿、面向原型开发、使用第三方UI组件库快速布局。
 	ToC产品：常常需要UI设计，用户体验要求极高，产品性能要求也更高。
+
+
+#### 十、项目打包与部署
+
+
+开发环境 -> 测试环境 ？ 开发环境 -> 生产环境 ？
+
+1、启动时可用选项
+```
+--open 自动打开浏览器
+--port 8899  自定义端口，不建议使用
+```
+
+2、图片使用
+
+	1）在HMTL、CSS、JS中都可以使用图片。放在assets目录中的图片，最终会被webpack打包并处理。
+	2）放在public目录中的图片，项目打包时不会被处理；并且放在public中的图片，更能方便地进行CDN加速部署。
+
+```
+<!-- 在HTML中使用图片 -->
+<img src="/1.png" alt="图片">
+<img src="../assets/logo.png" alt="">
+<div class="img1"></div>
+<div class="img2"></div>
+
+<!-- 在CSS中使用图片 -->
+.img1 {
+  width: 100px;
+  height: 100px;
+  background: url('/1.png') no-repeat 0 0 / 100px 100px;
+}
+.img2 {
+  width: 100px;
+  height: 100px;
+  background: url('../assets/logo.png') no-repeat 0 0 / 100px 100px;
+}
+```
+
+	3）工作中，我们建议使用模块化来管理项目中所有被使用到的图片。项目中的图片有三个来源，分别是assets目录、public目录和远程外部图片。模块化写法参考如下：
+```
+// 开发环境：指向 public 目录
+let cdnUrl = '/'
+// 线上环境：当项目打包上线时，把cdnUrl切换成图片服务器地址
+// let cdnUrl = 'https://qiniu.com/qf/webapp'
+
+export default {
+	// 远程外部图片
+	jdicon: 'https://wqimg.jd.com/imgproxy/n7/s150x150_jfs/t1/50018/39/8127/229510/5d5b5043E66769ff0/8907776f7bd66d57.jpg.dpg',
+
+	// assets目录中的图片
+  logo: ()=>import('@/assets/logo.png'),
+  a: ()=>import('@/assets/imgs/a.png'),
+
+	// public目录中的图片
+  car: cdnUrl + 'icons/car.png',
+  train: cdnUrl + 'icons/train.png',
+  plane: cdnUrl + 'icons/plane.png'
+}
+```
+
+3、publicPath
+
+```
+	./
+	/
+	/qf/
+	https://www.qiniu.com/qf/web/
+```
+
+4、hash缓存原理
+
+浏览器缓存原理 filenameHashing: false 关闭hash缓存
+实际工作中，不要关闭它。
+Hash的作用是为了解决浏览器缓存导致的代码更新问题。
+
+5、多页面配置
+
+不是每个应用都需要是一个单页应用。Vue CLI 支持使用 vue.config.js 中的 pages 选项构建一个多页面的应用。构建好的应用将会在不同的入口之间高效共享通用的 chunk 以获得最佳的加载性能。
+```
+pages: {
+	index: {
+		// page 的入口
+		entry: 'src/main.js',
+		// 模板来源
+		template: 'public/index.html',
+		// 在 dist/index.html 的输出
+		filename: 'index.html',
+		// 当使用 title 选项时，
+		// template 中的 title 标签需要是 <title><%= htmlWebpackPlugin.options.title %></title>
+		title: '首页',
+		// 在这个页面中包含的块，默认情况下会包含
+		// 提取出来的通用 chunk 和 vendor chunk。
+		chunks: ['chunk-vendors', 'chunk-common', 'index']
+	},
+	// 当使用只有入口的字符串格式时，
+	// 模板会被推导为 `public/subpage.html`
+	// 并且如果找不到的话，就回退到 `public/index.html`。
+	// 输出文件名会被推导为 `subpage.html`。
+	about : {
+		entry: 'src/main.js',
+		title: '关于我们',
+		chunks: ['chunk-vendors', 'chunk-common', 'index']
+	}
+}
+```
+6、项目部署
+
+域名购买与备案、DNS解析服务
+云服务器购买、虚拟主机
+nginx安装与使用、History模式重定向处理
+数据库安装与使用

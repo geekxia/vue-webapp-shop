@@ -109,7 +109,8 @@ export default {
       list: [],
       page: 1,
       finished: false,
-      loading: false
+      loading: false,
+      total: 0
     }
   },
   computed: {
@@ -135,22 +136,27 @@ export default {
     onLoad() {
       this.loading = true
       this.page++
-      this.getList()
+      if (this.total > this.list.length) {
+        this.getList()
+      }
+
     },
     getList() {
       let params = {
-        hot: false,
+        hot: true,
         page: this.page
       }
       this.$http.getHotGoodList(params).then(res=>{
-        console.log('商品列表', res)
-        if (res.length < 10) {
+        this.total = res.total
+
+        // console.log('商品列表====', res)
+        if (res.list.length < 10) {
           Toast('没有更多了')
         }
         if (this.refreshing) {
-          this.list = res
+          this.list = res.list
         } else {
-          this.list = [...this.list, ...res]
+          this.list = [...this.list, ...res.list]
         }
         this.finished = false
         this.refreshing = false
