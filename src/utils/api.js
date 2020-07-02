@@ -109,6 +109,14 @@ export function getGoodOfCate(params) {
   })
 }
 
+export function getAds(params) {
+  return fetch({
+    url: '/ad/list',
+    method: 'GET',
+    params
+  })
+}
+
 // 把所有接口方法统一抛出
 export default {
   regist,
@@ -121,5 +129,6 @@ export default {
   updateCart,
   submitCart,
   getAllCates,
-  getGoodOfCate
+  getGoodOfCate,
+  getAds
 }

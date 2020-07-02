@@ -11,7 +11,7 @@
   />
 
   <h3 v-text='info.name'></h3>
-  <img :src="info.img">
+  <img :src="img.baseUrl+info.img">
 
   <!-- 底部按钮群 -->
   <van-goods-action>
@@ -36,6 +36,7 @@ import {
   Button,
   Toast
 } from 'vant'
+import img from '@/utils/img'
 export default {
   name: 'Detail',
   components: {
@@ -53,7 +54,8 @@ export default {
   },
   data: function() {
     return {
-      info: {}
+      info: {},
+      img
     }
   },
   mounted() {

@@ -1,13 +1,19 @@
 <template lang="html">
 <div class="good">
   <div class="box">
-    <img :src="good.img" @touchstart='skipToDetail'>
+    <img :src="img.baseUrl+good.img" @touchstart='skipToDetail'>
   </div>
 </div>
 </template>
 
 <script>
+import img from '@/utils/img'
 export default {
+  data: function() {
+    return {
+      img
+    }
+  },
   props: {
     good: {
       type: Object,

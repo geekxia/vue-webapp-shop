@@ -27,22 +27,10 @@
 
     <!-- 轮播图 -->
     <van-swipe class="home-swipe" :autoplay="3000" indicator-color="white">
-      <van-swipe-item>
+      <van-swipe-item v-for='item in swiperArr' :key='item.id'>
         <van-image
           fit="contain"
-          src="//m.360buyimg.com/mobilecms/s700x280_jfs/t1/123287/30/5114/118908/5ee9e766E50040221/cd2215a2d91d1809.jpg!cr_1125x445_0_171!q70.jpg.dpg"
-        />
-      </van-swipe-item>
-      <van-swipe-item>
-        <van-image
-          fit="contain"
-          src="//m.360buyimg.com/mobilecms/s700x280_jfs/t1/120069/23/3943/100429/5ed706a6E46b65a74/11457cbd655fff67.jpg!cr_1125x445_0_171!q70.jpg.dpg"
-        />
-      </van-swipe-item>
-      <van-swipe-item>
-        <van-image
-          fit="contain"
-          src="//m.360buyimg.com/mobilecms/s700x280_jfs/t1/118233/21/10385/193825/5ee9e683E5392791c/09391ad1586a223b.jpg!q70.jpg.dpg"
+          :src="img.baseUrl+item.src"
         />
       </van-swipe-item>
     </van-swipe>
@@ -89,6 +77,7 @@ import {
   List,
   Toast
 } from 'vant'
+import img from '@/utils/img'
 export default {
   name: 'Home',
   components: {
@@ -105,12 +94,14 @@ export default {
   },
   data: function() {
     return {
+      img,
       refreshing: false,
       list: [],
       page: 1,
       finished: false,
       loading: false,
-      total: 0
+      total: 0,
+      swiperArr: []
     }
   },
   computed: {
@@ -124,6 +115,11 @@ export default {
   },
   mounted() {
     this.getList()
+    // 获取广告数据
+    this.$http.getAds({}).then((res)=>{
+      console.log('广告来了')
+      this.swiperArr = res
+    })
   },
   methods: {
     skipToLogin() {
@@ -143,7 +139,7 @@ export default {
     },
     getList() {
       let params = {
-        hot: true,
+        // hot: true,
         page: this.page
       }
       this.$http.getHotGoodList(params).then(res=>{
