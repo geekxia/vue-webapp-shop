@@ -31,7 +31,7 @@ export function login(data) {
 // 获取首页为你推荐的商品列表
 export function getHotGoodList(params) {
   return fetch({
-    url: '/good/list',
+    url: '/jd/getCateGoodList',
     method: 'GET',
     params
   })
@@ -40,7 +40,7 @@ export function getHotGoodList(params) {
 // 获取商品详情
 export function getGoodDetail(params) {
   return fetch({
-    url: '/good/detail',
+    url: '/jd/getGoodDetail',
     method: 'GET',
     params
   })
@@ -49,7 +49,7 @@ export function getGoodDetail(params) {
 // 加入购物车
 export function addToCart(data) {
   return fetch({
-    url: '/good/add',
+    url: '/jd/addGood',
     method: 'POST',
     data
   })
@@ -58,7 +58,7 @@ export function addToCart(data) {
 // 获取购物车列表
 export function getCartList(params) {
   return fetch({
-    url: '/cart/list',
+    url: '/jd/getCartList',
     method: 'GET',
     params
   })
@@ -100,6 +100,13 @@ export function getAllCates(params) {
   })
 }
 
+
+
+
+
+
+// ------
+
 // 基于品类进行筛选
 export function getGoodOfCate(params) {
   return fetch({
@@ -109,6 +116,7 @@ export function getGoodOfCate(params) {
   })
 }
 
+// 添加banner广告
 export function getAds(params) {
   return fetch({
     url: '/ad/list',
